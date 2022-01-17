@@ -34,7 +34,11 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
+
+			_ = command(dir, "/usr/bin/git", "remote", "add", "new", fmt.Sprintf(Config.Remote.New, name)) // 添加新的远程地址
 		}
+
+		_ = command(dir, "/usr/bin/git", "remote", "prune", "origin") // 删除git上不存在的分支
 
 		// 获取远程分支
 		cmd := command(dir, "/usr/bin/git", "branch", "-r")
@@ -71,6 +75,7 @@ func main() {
 			}
 			localBranches = append(localBranches, strings.Replace(branch, "*", "", 1))
 		}
+		// 对比分支，下拉不存在的分支
 		for _, o := range remoteBranches {
 			if !contain(localBranches, o) {
 				cmd = command(dir, "/usr/bin/git", "checkout", "-b", o, "origin/"+o)
