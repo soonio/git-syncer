@@ -13,17 +13,12 @@ func main() {
 	if len(os.Args) < 2 {
 		color.Redln("请输入有效的配置文件.")
 		return
+	} else {
+		initializeViper(os.Args[1])
 	}
 
 	home := Config.Storage
 
-	initializeViper(os.Args[1])
-
-	//判断本地仓库是否存在，不存在则进行初始化
-	//判断本地仓库是否已经添加了新的仓库地址，没有的话，则添加新的远程仓库地址
-	//拉取最新的git远程代码，推送到coding远程仓库中
-	//拉取最新的coding远程代码，推送到git远程仓库中
-	//	(\/)(?!.*\1).*\.git
 	for _, name := range Config.Repo {
 		dir := fmt.Sprintf("%s/%s", home, name[0:len(name)-4])
 		fi, _ := os.Stat(dir)
