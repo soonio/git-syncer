@@ -15,7 +15,7 @@ func main() {
 		return
 	}
 
-	home, _ := os.Getwd()
+	home := Config.Storage
 
 	initializeViper(os.Args[1])
 
@@ -25,7 +25,7 @@ func main() {
 	//拉取最新的coding远程代码，推送到git远程仓库中
 	//	(\/)(?!.*\1).*\.git
 	for _, name := range Config.Repo {
-		dir := fmt.Sprintf("%s/repo/%s", home, name[0:len(name)-4])
+		dir := fmt.Sprintf("%s/%s", home, name[0:len(name)-4])
 		fi, _ := os.Stat(dir)
 		if fi == nil { // 判断是否有项目目录
 			_ = command("/bin/rm", "-rf", dir).Run()         // 进行尝试性清空

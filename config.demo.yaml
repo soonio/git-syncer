@@ -1,7 +1,13 @@
+
+# 保存代码的文件目录
+storage: /Users/iwork/study/syncer/repo
+
+# 远程仓库地址
 remote:
   origin: git@gitlab.domain.com:%s
   new: git@e.coding.net:domain/%s
 
+# 需要同步的项目
 repo:
   - group/api.git
   - group/php-middleware.git

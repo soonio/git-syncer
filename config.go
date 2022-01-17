@@ -13,8 +13,9 @@ type remote struct {
 }
 
 type config struct {
-	Remote remote   `mapstructure:"remote" json:"remote" yaml:"remote"` // 远程配置
-	Repo   []string `mapstructure:"repo" json:"repo" yaml:"repo"`       // 仓库信息
+	Storage string   `mapstructure:"storage" json:"storage" yaml:"storage"` // 存储库
+	Remote  remote   `mapstructure:"remote" json:"remote" yaml:"remote"`    // 远程配置
+	Repo    []string `mapstructure:"repo" json:"repo" yaml:"repo"`          // 仓库信息
 }
 
 func initializeViper(config string) *viper.Viper {
