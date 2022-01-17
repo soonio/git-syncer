@@ -1,0 +1,9 @@
+remote:
+  origin: git@gitlab.domain.com:%s
+  new: git@e.coding.net:domain/%s
+
+repo:
+  - group/api.git
+  - group/php-middleware.git
+  - group/front.git
+  - group/shell.git
