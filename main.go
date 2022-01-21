@@ -15,6 +15,8 @@ const (
 
 func main() {
 
+	color.Blueln(fmt.Sprintf("[%s] ✨✨✨ Git仓库同步计划开始[start-sync]", time.Now().Format("2006-01-02 15:04:05")))
+
 	if len(os.Args) < 2 {
 		color.Redln("请输入有效的配置文件.")
 		return
@@ -115,6 +117,8 @@ func main() {
 			time.Sleep(time.Second)
 		}
 	}
+
+	color.Blueln(fmt.Sprintf("[%s] ✨✨✨ Git仓库同步计划结束[end-sync]", time.Now().Format("2006-01-02 15:04:05")))
 }
 
 // 获取远程分支
