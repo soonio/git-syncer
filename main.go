@@ -57,6 +57,7 @@ func main() {
 			}
 		}
 
+		_ = command(dir, Git, "pull", "origin").Run()              // 刷新原始分支
 		err = command(dir, Git, "remote", "prune", "origin").Run() // 删除git上不存在的分支
 		if err != nil {
 			color.Redln(fmt.Sprintf("\tgit清除不存在的分支失败%s", dir))
@@ -103,6 +104,8 @@ func main() {
 				color.Redln(fmt.Sprintf("\t分支下拉失败%s", name))
 				color.Grayln("\t" + c.String())
 				color.Grayln("\t" + err.Error())
+
+				_ = command(dir, Git, "branch", "-D", branch).Run()
 			}
 
 			d := command(dir, Git, "push", "new", branch)
@@ -183,5 +186,8 @@ func command(dir, name string, arg ...string) *exec.Cmd {
 		Args: append([]string{name}, arg...),
 		Dir:  dir,
 	}
+
+	// fmt.Println(c.String())
+
 	return c
 }
