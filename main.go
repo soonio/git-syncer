@@ -26,10 +26,18 @@ func main() {
 
 	home := Config.Storage
 
-	for _, name := range Config.Repo {
-		dir := fmt.Sprintf("%s/%s", home, name[0:len(name)-4])
+	for _, current := range Config.Repo {
+		var backup = current
+		for _, d := range Config.Maps {
+			if d.Key == current {
+				backup = d.Value
+				break
+			}
+		}
 
-		color.Blueln(fmt.Sprintf("[%s] 🚀 开始同步 %s", time.Now().Format("2006-01-02 15:04:05"), name))
+		dir := fmt.Sprintf("%s/%s", home, current[0:len(current)-4])
+
+		color.Blueln(fmt.Sprintf("[%s] 🚀 开始同步 %s", time.Now().Format("2006-01-02 15:04:05"), current))
 
 		fi, err := os.Stat(dir)
 		if err != nil || !fi.IsDir() { // 判断是否有项目目录
@@ -41,7 +49,7 @@ func main() {
 				color.Grayln(err.Error())
 			}
 
-			repo := fmt.Sprintf(Config.Remote.Origin, name)
+			repo := fmt.Sprintf(Config.Remote.Origin, current)
 			c := command(dir, Git, "clone", repo, dir) // 重新clone代码
 			err = c.Run()
 			if err != nil {
@@ -49,7 +57,7 @@ func main() {
 				color.Grayln("\t" + err.Error())
 			}
 
-			newRemote := fmt.Sprintf(Config.Remote.New, name)
+			newRemote := fmt.Sprintf(Config.Remote.New, backup)
 			err = command(dir, Git, "remote", "add", "new", newRemote).Run() // 添加新的远程地址
 			if err != nil {
 				color.Redln(fmt.Sprintf("\tgit添加新 %s 到 %s失败", newRemote, dir))
@@ -85,7 +93,7 @@ func main() {
 			a := command(dir, Git, "reset", "--hard")
 			err = a.Run()
 			if err != nil {
-				color.Redln(fmt.Sprintf("\t重置代码失败%s:%s", name, branch))
+				color.Redln(fmt.Sprintf("\t重置代码失败%s:%s", current, branch))
 				color.Grayln(a.String())
 				color.Grayln("\t" + err.Error())
 			}
@@ -93,7 +101,7 @@ func main() {
 			b := command(dir, Git, "checkout", branch)
 			err = b.Run()
 			if err != nil {
-				color.Redln(fmt.Sprintf("\t切换分支失败%s %s", name, branch))
+				color.Redln(fmt.Sprintf("\t切换分支失败%s %s", current, branch))
 				color.Grayln(b.String())
 				color.Grayln("\t" + err.Error())
 			}
@@ -101,7 +109,7 @@ func main() {
 			c := command(dir, Git, "pull", "origin", branch)
 			err = c.Run()
 			if err != nil {
-				color.Redln(fmt.Sprintf("\t分支下拉失败%s", name))
+				color.Redln(fmt.Sprintf("\t分支下拉失败%s", current))
 				color.Grayln("\t" + c.String())
 				color.Grayln("\t" + err.Error())
 
@@ -111,11 +119,11 @@ func main() {
 			d := command(dir, Git, "push", "new", branch)
 			err = d.Run()
 			if err != nil {
-				color.Redln(fmt.Sprintf("\t推送到新的远程分支失败%s", name))
+				color.Redln(fmt.Sprintf("\t推送到新的远程分支失败%s", current))
 				color.Grayln("\t" + d.String())
 				color.Grayln("\t" + err.Error())
 			} else {
-				color.Greenln(fmt.Sprintf("\t推到新仓库成功%s:%s", name, branch))
+				color.Greenln(fmt.Sprintf("\t推到新仓库成功%s:%s", current, branch))
 			}
 			time.Sleep(time.Second)
 		}
@@ -186,8 +194,5 @@ func command(dir, name string, arg ...string) *exec.Cmd {
 		Args: append([]string{name}, arg...),
 		Dir:  dir,
 	}
-
-	// fmt.Println(c.String())
-
 	return c
 }

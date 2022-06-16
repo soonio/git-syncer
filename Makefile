@@ -8,7 +8,6 @@ build:
 	$(GOCLEAN)
 	$(GOBUILD)
 
-
 clean:
 	$(GOCLEAN)
 	$(RMTARGZ)

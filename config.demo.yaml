@@ -13,3 +13,9 @@ repo:
   - group/php-middleware.git
   - group/front.git
   - group/shell.git
+
+# 定义映射，新旧仓库可以不同名不同组
+maps:
+  -
+    key: group/shell.git
+    value: other/shell.git
